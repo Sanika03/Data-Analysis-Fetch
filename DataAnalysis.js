@@ -33,12 +33,31 @@ const fetchData = async () => {
     return response;
 }
 
+const verifyAnswer = async(answerData) => {
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answerData)
+    });
+    const answerStatus = await response.json();
+    console.log(`Response for answer '${answerData.answer}': \n ${JSON.stringify(answerStatus)}`);
+}
+
 const DataAnalysis = async () => {
     try {
         const res = await fetchData();
         const assignment_id = res.headers.get("x-assignment-id");
         const data = await res.json();
         const mostUsedJargon = getMostUsedJargon(data);
+        for (let i = 0; i < mostUsedJargon.length; i++) {
+            const answerData = {
+                assignment_id: assignment_id,
+                answer: mostUsedJargon[i]
+            };
+            await verifyAnswer(answerData);
+        }
     } catch (error) {
         throw new Error(error);
     }
