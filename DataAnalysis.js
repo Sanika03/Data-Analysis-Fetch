@@ -48,7 +48,7 @@ const verifyAnswer = async(answerData) => {
 const dataAnalysis = async () => {
     try {
         const res = await fetchData();
-        if (res.status === 300) {
+        if (res.status === 200) {
             const assignment_id = res.headers.get("x-assignment-id");
             const data = await res.json();
             const mostUsedJargon = getMostUsedJargon(data);
