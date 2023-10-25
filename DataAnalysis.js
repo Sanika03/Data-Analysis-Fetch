@@ -48,15 +48,21 @@ const verifyAnswer = async(answerData) => {
 const dataAnalysis = async () => {
     try {
         const res = await fetchData();
-        const assignment_id = res.headers.get("x-assignment-id");
-        const data = await res.json();
-        const mostUsedJargon = getMostUsedJargon(data);
-        for (let i = 0; i < mostUsedJargon.length; i++) {
-            const answerData = {
-                assignment_id: assignment_id,
-                answer: mostUsedJargon[i]
-            };
-            await verifyAnswer(answerData);
+        if (res.status === 300) {
+            const assignment_id = res.headers.get("x-assignment-id");
+            const data = await res.json();
+            const mostUsedJargon = getMostUsedJargon(data);
+            for (let i = 0; i < mostUsedJargon.length; i++) {
+                const answerData = {
+                    assignment_id: assignment_id,
+                    answer: mostUsedJargon[i]
+                };
+                await verifyAnswer(answerData);
+            }
+        } else if (res.status === 500) {
+            console.error("Error: HTTP 500 response. Please retry");
+        } else {
+            console.error("Error: Failed to fetch data")
         }
     } catch (error) {
         throw new Error(error);
