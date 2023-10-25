@@ -45,7 +45,7 @@ const verifyAnswer = async(answerData) => {
     console.log(`Response for answer '${answerData.answer}': \n ${JSON.stringify(answerStatus)}`);
 }
 
-const DataAnalysis = async () => {
+const dataAnalysis = async () => {
     try {
         const res = await fetchData();
         const assignment_id = res.headers.get("x-assignment-id");
@@ -63,4 +63,4 @@ const DataAnalysis = async () => {
     }
 }
 
-DataAnalysis();
+dataAnalysis();
