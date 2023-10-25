@@ -9,3 +9,15 @@ const fetchData = async () => {
     });
     return response;
 }
+
+const DataAnalysis = async () => {
+    try {
+        const res = await fetchData();
+        const assignment_id = res.headers.get("x-assignment-id");
+        const data = await res.json();
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+DataAnalysis();
