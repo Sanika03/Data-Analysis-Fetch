@@ -46,9 +46,11 @@ const verifyAnswer = async(answerData) => {
 }
 
 const dataAnalysis = async () => {
+    const maxRetries = 3;
+    let retryCount = 0;
     try {
         const res = await fetchData();
-        if (res.status === 200) {
+        if (res.ok) {
             const assignment_id = res.headers.get("x-assignment-id");
             const data = await res.json();
             const mostUsedJargon = getMostUsedJargon(data);
@@ -59,13 +61,18 @@ const dataAnalysis = async () => {
                 };
                 await verifyAnswer(answerData);
             }
-        } else if (res.status === 500) {
-            console.error("Error: HTTP 500 response. Please retry");
         } else {
-            console.error("Error: Failed to fetch data")
+            console.error(`Error: HTTP ${res.status} response.`);
+            if (retryCount < maxRetries) {
+                console.log('Retrying...');
+                retryCount++;
+                await dataAnalysis();
+            } else {
+                console.error("Max retries reached. Please try again later.");
+            }
         }
     } catch (error) {
-        throw new Error(error);
+        console.error("Error: Failed to fetch data", error);
     }
 }
 
