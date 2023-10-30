@@ -1,24 +1,26 @@
 const url = "https://one00x-data-analysis.onrender.com/assignment?email=sanikasuryawanshi0305@gmail.com";
 
 const getMostUsedJargon = (data) => {
-    const jargons = {};
-    let [mostUsedJargon, jargonCount] = [[], 0];
+    const jargons = new Map();
+    let mostUsedJargon = [];
+    let jargonCount = 0;
 
     data.forEach(word => {
-        if (jargons[word]) {
-            jargons[word]++;
+        if (jargons.has(word)) {
+            jargons.set(word, jargons.get(word) + 1);
         } else {
-            jargons[word] = 1;
+            jargons.set(word, 1);
         }
     });
 
-    for (const word in jargons) {
-        if (jargons[word] > jargonCount) {
-            [mostUsedJargon, jargonCount] = [[word], jargons[word]];
-        } else if (jargons[word] === jargonCount) {
+    jargons.forEach((count, word) => {
+        if (count > jargonCount) {
+            mostUsedJargon = [word];
+            jargonCount = count;
+        } else if (count === jargonCount) {
             mostUsedJargon.push(word);
         }
-    }
+    });
 
     return mostUsedJargon;
 }
